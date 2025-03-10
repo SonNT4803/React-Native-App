@@ -1,0 +1,142 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { OrdersService } from './orders.service';
+import { RolesGuard } from '../auth/guard/roles.guard';
+import { Roles } from '../auth/guard/roles.decorator';
+import { CreateOrderDto } from './dto/orders.dto';
+import { User } from 'src/entities/users.entity';
+import { UpdateOrderStatusDto } from 'src/food/dto/food.dto';
+import { GetUser } from '../auth/guard/user.decorator';
+
+@Controller('orders')
+@UseGuards(RolesGuard)
+export class OrdersController {
+  constructor(private readonly ordersService: OrdersService) {}
+
+  @Post()
+  @Roles('Customer')
+  @HttpCode(HttpStatus.CREATED)
+  async create(
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<{ statusCode: HttpStatus; message: string; data: any }> {
+    try {
+      const result = await this.ordersService.create(createOrderDto);
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Order created successfully',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: error.message || 'Failed to create order',
+        data: null,
+      };
+    }
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async findAll(
+    @Query('userId') userId?: number,
+    @GetUser() user?: any,
+  ): Promise<{ statusCode: HttpStatus; message: string; data: any }> {
+    try {
+      let result;
+      if (user && user.role === 'Customer') {
+        result = await this.ordersService.findAll(user.id);
+      } else {
+        result = await this.ordersService.findAll(userId);
+      }
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Orders retrieved successfully',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to retrieve orders',
+        data: null,
+      };
+    }
+  }
+
+  @Patch(':id/status')
+  @Roles('Admin', 'Shipper')
+  @HttpCode(HttpStatus.OK)
+  async updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateOrderStatusDto: UpdateOrderStatusDto,
+  ): Promise<{ statusCode: HttpStatus; message: string; data?: any }> {
+    try {
+      const result = await this.ordersService.updateStatus(
+        id,
+        updateOrderStatusDto,
+      );
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Order status updated successfully',
+        data: result,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: error.message,
+          data: null,
+        };
+      }
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: error.message || 'Failed to update order status',
+        data: null,
+      };
+    }
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ statusCode: HttpStatus; message: string }> {
+    try {
+      await this.ordersService.remove(id);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Order deleted successfully',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: error.message,
+        };
+      }
+      if (error instanceof ForbiddenException) {
+        return {
+          statusCode: HttpStatus.FORBIDDEN,
+          message: error.message,
+        };
+      }
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: error.message || 'Failed to delete order',
+      };
+    }
+  }
+}
