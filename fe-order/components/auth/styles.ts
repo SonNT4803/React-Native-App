@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     marginBottom: 30,
   },
   welcomeTitle: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 8,
@@ -55,6 +55,8 @@ export const styles = StyleSheet.create({
     position: "absolute",
     right: 16,
     top: 16,
+    padding: 4,
+    zIndex: 1,
   },
   loginButton: {
     backgroundColor: "#FF6B6B",
@@ -135,5 +137,26 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "#FF6B6B",
+  },
+  inputError: {
+    borderColor: "#FF3B30",
+    borderWidth: 1,
+  },
+  errorText: {
+    color: "#FF3B30",
+    fontSize: 12,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+  errorContainer: {
+    backgroundColor: "rgba(255, 59, 48, 0.1)",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 15,
+  },
+  errorMessage: {
+    color: "#FF3B30",
+    fontSize: 14,
+    textAlign: "center",
   },
 });

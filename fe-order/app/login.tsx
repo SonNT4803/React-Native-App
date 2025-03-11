@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
@@ -15,12 +16,19 @@ import { styles } from "@/components/auth/styles";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const [loginError, setLoginError] = useState("");
 
   const handleLogin = (email: string, password: string) => {
-    // Handle login logic here
     console.log("Login with:", email, password);
-    // Navigate to home screen on successful login
+    // Xử lý đăng nhập được thực hiện trong LoginForm
+  };
+
+  const handleLoginSuccess = () => {
     router.replace("/(tabs)");
+  };
+
+  const handleLoginFailure = (errorMessage: string) => {
+    setLoginError(errorMessage);
   };
 
   const handleSignUp = () => {
@@ -58,7 +66,17 @@ export default function LoginScreen() {
           </ThemedText>
         </View>
 
-        <LoginForm onLogin={handleLogin} />
+        {loginError ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorMessage}>{loginError}</Text>
+          </View>
+        ) : null}
+
+        <LoginForm
+          onLogin={handleLogin}
+          onLoginSuccess={handleLoginSuccess}
+          onLoginFailure={handleLoginFailure}
+        />
 
         <TouchableOpacity
           onPress={handleForgotPassword}

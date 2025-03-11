@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const apiEndpoint = "http://localhost:3000";
+const apiEndpoint = "http://192.168.137.40:5000";
 
 // Tạo một instance của Axios
 const axiosInstance: AxiosInstance = axios.create({
@@ -13,8 +14,8 @@ const axiosInstance: AxiosInstance = axios.create({
 
 // Cấu hình request interceptor
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
+  async (config) => {
+    const token = await AsyncStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

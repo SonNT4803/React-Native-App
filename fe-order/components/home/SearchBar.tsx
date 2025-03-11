@@ -1,12 +1,15 @@
 import React from "react";
-import { View, Image, TextInput } from "react-native";
+import { View, TextInput } from "react-native";
 import { styles } from "./styles";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export const SearchBar = () => {
   return (
     <View style={styles.searchContainer}>
-      <Image
-        // source={require("@/assets/images/search.png")}
+      <FontAwesome
+        name="search"
+        size={20}
+        color="#999"
         style={styles.searchIcon}
       />
       <TextInput

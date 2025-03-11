@@ -36,7 +36,6 @@ export const styles = StyleSheet.create({
   searchIcon: {
     width: 20,
     height: 20,
-    marginRight: 10,
   },
   searchInput: {
     flex: 1,
@@ -121,5 +120,72 @@ export const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#000",
     textAlign: "center",
+  },
+  centerContent: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  popularPrice: {
+    fontSize: 14,
+    color: "#FF6B6B",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 4,
+  },
+  foodListContainer: {
+    paddingVertical: 15,
+  },
+  foodCard: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+    overflow: "hidden",
+  },
+  foodImage: {
+    width: 100,
+    height: 100,
+    backgroundColor: "#f0f0f0",
+  },
+  foodInfo: {
+    flex: 1,
+    padding: 12,
+  },
+  foodTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#000",
+  },
+  foodDescription: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 10,
+  },
+  foodPriceContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  foodPrice: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#FF6B6B",
+  },
+  addToCartButton: {
+    backgroundColor: "#FF6B6B",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+  },
+  addToCartText: {
+    color: "#FFF",
+    fontSize: 12,
+    fontWeight: "500",
   },
 });

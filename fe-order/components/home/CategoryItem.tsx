@@ -5,14 +5,23 @@ import { styles } from "./styles";
 
 interface CategoryItemProps {
   title: string;
-  imageSource?: any;
+  imageSource?: string;
+  onPress?: () => void;
 }
 
-export const CategoryItem = ({ title, imageSource }: CategoryItemProps) => {
+export const CategoryItem = ({
+  title,
+  imageSource,
+  onPress,
+}: CategoryItemProps) => {
   return (
-    <TouchableOpacity style={styles.categoryItem}>
+    <TouchableOpacity style={styles.categoryItem} onPress={onPress}>
       <Image
-        // source={imageSource}
+        source={
+          imageSource
+            ? { uri: imageSource }
+            : require("@/assets/images/react-logo.png")
+        }
         style={styles.categoryImage}
       />
       <ThemedText style={styles.categoryText}>{title}</ThemedText>
