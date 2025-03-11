@@ -1,3 +1,4 @@
+import { getUserFromToken } from "@/utils/authUtils";
 import axiosInstance from "@/utils/axiosIntance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -68,6 +69,42 @@ class AuthService {
   async isAuthenticated(): Promise<boolean> {
     const token = await AsyncStorage.getItem("accessToken");
     return token !== null;
+  }
+
+  async getCurrentUser(): Promise<UserData | null> {
+    try {
+      const token = await AsyncStorage.getItem("accessToken");
+      if (!token) return null;
+
+      // Sử dụng axiosInstance để lấy thông tin user từ API
+      const response = await axiosInstance.get("/users/me");
+      if (response.data && response.data.statusCode === 200) {
+        return response.data.data;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error getting current user:", error);
+      return null;
+    }
+  }
+
+  async getUserFromToken(): Promise<UserData | null> {
+    try {
+      const token = await AsyncStorage.getItem("accessToken");
+      if (!token) return null;
+
+      const decoded = getUserFromToken(token);
+      if (!decoded) return null;
+
+      return {
+        id: decoded.sub,
+        email: decoded.email,
+        role: decoded.role,
+      };
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
   }
 }
 

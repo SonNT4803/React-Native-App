@@ -80,6 +80,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   seeAll: {
+    fontWeight: "bold",
     fontSize: 14,
     color: "#FF6B6B",
   },

@@ -37,22 +37,6 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="products"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <IconSymbol size={24} name="list.bullet" color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="explore"
-          options={{
-            tabBarIcon: ({ color }) => (
-              <IconSymbol size={24} name="paperplane.fill" color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
           name="cart"
           options={{
             tabBarIcon: ({ color }) => (

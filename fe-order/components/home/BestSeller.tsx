@@ -52,6 +52,10 @@ export const BestSeller = () => {
     // router.push(`/food/${foodId}`);
   };
 
+  const handleSeeAllPress = () => {
+    router.push("/all-foods");
+  };
+
   const formatPrice = (price: number) => {
     return price.toLocaleString("vi-VN", {
       style: "currency",
@@ -71,7 +75,9 @@ export const BestSeller = () => {
     <View style={styles.sectionContainer}>
       <View style={styles.headerContainer}>
         <ThemedText style={styles.sectionTitle}>Best Seller</ThemedText>
-        <ThemedText style={styles.seeAll}>Xem tất cả</ThemedText>
+        <TouchableOpacity onPress={handleSeeAllPress}>
+          <ThemedText style={styles.seeAll}>Xem tất cả</ThemedText>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.scrollContainer}>
