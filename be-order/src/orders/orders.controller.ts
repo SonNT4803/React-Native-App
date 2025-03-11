@@ -138,4 +138,25 @@ export class OrdersController {
       };
     }
   }
+
+  @Get('best-sellers')
+  @HttpCode(HttpStatus.OK)
+  async getBestSellers(
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ): Promise<{ statusCode: HttpStatus; message: string; data: any }> {
+    try {
+      const result = await this.ordersService.getBestSellers(limit);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Best sellers retrieved successfully',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to retrieve best sellers',
+        data: null,
+      };
+    }
+  }
 }

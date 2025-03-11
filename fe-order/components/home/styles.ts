@@ -66,126 +66,191 @@ export const styles = StyleSheet.create({
     color: "#000",
   },
   sectionContainer: {
-    marginBottom: 25,
+    marginVertical: 15,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 15,
-    color: "#000",
   },
-  dealContainer: {
-    backgroundColor: "#FF6B6B",
-    borderRadius: 15,
-    padding: 15,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  dealContent: {
-    flex: 1,
-  },
-  dealTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#FFF",
-    marginBottom: 5,
-  },
-  dealDescription: {
-    fontSize: 14,
-    color: "#FFF",
-  },
-  dealImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.3)", // Placeholder color
-  },
-  popularContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  popularItem: {
-    width: "48%",
-  },
-  popularImage: {
-    width: "100%",
-    height: 150,
-    borderRadius: 15,
-    marginBottom: 8,
-    backgroundColor: "#f0f0f0", // Placeholder color
-  },
-  popularText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#000",
-    textAlign: "center",
-  },
-  centerContent: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  popularPrice: {
+  seeAll: {
     fontSize: 14,
     color: "#FF6B6B",
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 4,
   },
-  foodListContainer: {
-    paddingVertical: 15,
+  scrollContainer: {
+    position: "relative",
   },
-  foodCard: {
-    flexDirection: "row",
+  scrollViewContent: {
+    paddingHorizontal: 15,
+  },
+  bestSellerCard: {
+    width: 160,
+    marginRight: 15,
     backgroundColor: "#fff",
-    borderRadius: 15,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    borderRadius: 12,
+    shadowColor: "#grey",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowRadius: 3.84,
+    elevation: 5,
     overflow: "hidden",
   },
   foodImage: {
-    width: 100,
-    height: 100,
-    backgroundColor: "#f0f0f0",
+    width: "100%",
+    height: 160,
+    resizeMode: "cover",
   },
   foodInfo: {
-    flex: 1,
     padding: 12,
   },
-  foodTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "#000",
+  foodName: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 4,
   },
-  foodDescription: {
+  foodPrice: {
+    fontSize: 14,
+    color: "#FF6B6B",
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  soldCountContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  soldCount: {
     fontSize: 12,
     color: "#666",
-    marginBottom: 10,
+    marginLeft: 4,
   },
-  foodPriceContainer: {
+  scrollIndicator: {
+    position: "absolute",
+    top: "50%",
+    transform: [{ translateY: -15 }],
+    width: 30,
+    height: 30,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  leftIndicator: {
+    left: 5,
+  },
+  rightIndicator: {
+    right: 5,
+  },
+  loadingContainer: {
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  productsContainer: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+  productsList: {
+    padding: 10,
+  },
+  productsRow: {
+    justifyContent: "space-between",
+  },
+  foodCard: {
+    width: "48%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    overflow: "hidden",
+  },
+  foodCardImage: {
+    width: "100%",
+    height: 150,
+    resizeMode: "cover",
+  },
+  foodCardContent: {
+    padding: 12,
+  },
+  foodCardName: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  foodCardDescription: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 8,
+    height: 32,
+  },
+  foodCardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  foodPrice: {
+  foodCardPrice: {
     fontSize: 14,
     fontWeight: "bold",
     color: "#FF6B6B",
   },
   addToCartButton: {
     backgroundColor: "#FF6B6B",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 20,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  addToCartText: {
-    color: "#FFF",
+  outOfStock: {
     fontSize: 12,
-    fontWeight: "500",
+    color: "#FF3B30",
+    fontStyle: "italic",
+  },
+  productsHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    paddingTop: 50, // Điều chỉnh theo status bar
+    paddingBottom: 15,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+  },
+  productsTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -162,4 +162,35 @@ export class OrdersService {
 
     await this.orderRepository.softDelete(id);
   }
+
+  async getBestSellers(limit: number = 10): Promise<any[]> {
+    // Sử dụng queryBuilder để tính tổng số lượng bán của từng món
+    const bestSellers = await this.orderDetailRepository
+      .createQueryBuilder('orderDetail')
+      .leftJoinAndSelect('orderDetail.food', 'food')
+      .select([
+        'food.id',
+        'food.name',
+        'food.price',
+        'food.image',
+        'food.description',
+        'SUM(orderDetail.quantity) as totalQuantity',
+        'COUNT(DISTINCT orderDetail.order) as orderCount',
+      ])
+      .where('food.isAvailable = :isAvailable', { isAvailable: true })
+      .groupBy('food.id')
+      .orderBy('totalQuantity', 'DESC')
+      .limit(limit)
+      .getRawMany();
+
+    return bestSellers.map((item) => ({
+      id: item.food_id,
+      name: item.food_name,
+      price: item.food_price,
+      image: item.food_image,
+      description: item.food_description,
+      totalQuantity: parseInt(item.totalQuantity),
+      orderCount: parseInt(item.orderCount),
+    }));
+  }
 }

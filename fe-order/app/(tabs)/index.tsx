@@ -1,5 +1,5 @@
+import { BestSeller } from "@/components/home/BestSeller";
 import { CategoryItem } from "@/components/home/CategoryItem";
-import { DealOfDay } from "@/components/home/DealOfDay";
 import { Header } from "@/components/home/Header";
 import { PopularItem } from "@/components/home/PopularItem";
 import { SearchBar } from "@/components/home/SearchBar";
@@ -59,12 +59,12 @@ export default function HomeScreen() {
           )}
         </View>
 
-        <DealOfDay />
+        <BestSeller />
 
         {/* Popular */}
         <View style={styles.sectionContainer}>
           <ThemedText style={styles.sectionTitle}>Popular</ThemedText>
-          <View style={styles.popularContainer}>
+          <View>
             <PopularItem title="Maharaja Mac" />
             <PopularItem title="Cheese Pizza" />
           </View>

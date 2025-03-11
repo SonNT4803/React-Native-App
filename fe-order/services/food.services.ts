@@ -1,6 +1,5 @@
-import axiosInstance from "@/utils/axiosIntance";
 import { Food } from "@/models/food.models";
-import { Response } from "@/models/response.modes";
+import axiosInstance from "@/utils/axiosIntance";
 
 export const FoodService = {
   // Get all foods
@@ -40,6 +39,21 @@ export const FoodService = {
       return [];
     } catch (error) {
       console.error(`Error fetching food with category ${category}:`, error);
+      return [];
+    }
+  },
+
+  getBestSellers: async (limit: number = 10): Promise<Food[]> => {
+    try {
+      const response = await axiosInstance.get(
+        `/orders/best-sellers?limit=${limit}`
+      );
+      if (response.data.statusCode === 200) {
+        return response.data.data;
+      }
+      return [];
+    } catch (error) {
+      console.error("Error fetching best sellers:", error);
       return [];
     }
   },

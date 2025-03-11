@@ -9,4 +9,5 @@ export interface Food {
   isAvailable: boolean;
   category?: Category;
   categoryId?: number;
+  totalQuantity?: number;
 }
