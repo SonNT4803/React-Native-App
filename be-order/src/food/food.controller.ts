@@ -136,4 +136,30 @@ export class FoodController {
       };
     }
   }
+
+  @Get('category/:categoryId')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async findByCategory(
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ): Promise<{
+    statusCode: HttpStatus;
+    message: string;
+    data: any;
+  }> {
+    try {
+      const result = await this.foodService.findByCategoryId(categoryId);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Foods by category retrieved successfully',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to retrieve foods by category',
+        data: null,
+      };
+    }
+  }
 }

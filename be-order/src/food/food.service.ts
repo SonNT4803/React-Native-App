@@ -17,7 +17,25 @@ export class FoodService {
   }
 
   async findAll(): Promise<Food[]> {
-    return await this.foodRepository.find();
+    return await this.foodRepository.find({
+      relations: ['category'],
+    });
+  }
+
+  async findByCategoryId(categoryId: number): Promise<Partial<Food>[]> {
+    const foods = await this.foodRepository.find({
+      where: { category: { id: categoryId } },
+      relations: ['category'],
+    });
+
+    return foods.map((food) => ({
+      id: food.id,
+      name: food.name,
+      price: food.price,
+      description: food.description,
+      image: food.image,
+      isAvailable: food.isAvailable,
+    }));
   }
 
   async findOne(id: number): Promise<Food> {

@@ -14,13 +14,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { RolesGuard } from '../auth/guard/roles.guard';
-import { Roles } from '../auth/guard/roles.decorator';
-import { CreateOrderDto } from './dto/orders.dto';
-import { User } from 'src/entities/users.entity';
 import { UpdateOrderStatusDto } from 'src/food/dto/food.dto';
+import { Roles } from '../auth/guard/roles.decorator';
+import { RolesGuard } from '../auth/guard/roles.guard';
 import { GetUser } from '../auth/guard/user.decorator';
+import { CreateOrderDto } from './dto/orders.dto';
+import { OrdersService } from './orders.service';
 
 @Controller('orders')
 @UseGuards(RolesGuard)
