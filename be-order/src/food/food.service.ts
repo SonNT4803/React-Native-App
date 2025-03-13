@@ -56,4 +56,79 @@ export class FoodService {
     const food = await this.findOne(id);
     await this.foodRepository.softDelete(id);
   }
+
+  async findRecommendedFood(limit: number = 5): Promise<Food[]> {
+    // Lấy tất cả các danh mục có sẵn
+    const categories = await this.foodRepository
+      .createQueryBuilder('food')
+      .select('food.category')
+      .groupBy('food.category')
+      .getRawMany();
+
+    // Lấy danh sách ID của các danh mục
+    const categoryIds = categories.map((c) => c.food_category);
+
+    // Nếu không có danh mục nào, trả về mảng rỗng
+    if (categoryIds.length === 0) {
+      return [];
+    }
+
+    // Tạo một mảng để lưu trữ các món ăn được đề xuất
+    const recommendedFoods: Food[] = [];
+
+    // Lấy món ăn ngẫu nhiên từ mỗi danh mục
+    for (const categoryId of categoryIds) {
+      if (recommendedFoods.length >= limit) break;
+
+      const randomFood = await this.foodRepository
+        .createQueryBuilder('food')
+        .leftJoinAndSelect('food.category', 'category')
+        .where('category.id = :categoryId', { categoryId })
+        .andWhere('food.isAvailable = :isAvailable', { isAvailable: true })
+        .orderBy('RAND()') // PostgreSQL
+        // Nếu sử dụng MySQL: .orderBy('RAND()')
+        .take(1)
+        .getOne();
+
+      if (randomFood) {
+        recommendedFoods.push(randomFood);
+      }
+    }
+
+    // Nếu chưa đủ số lượng, lấy thêm các món ăn ngẫu nhiên
+    if (recommendedFoods.length < limit) {
+      const remainingCount = limit - recommendedFoods.length;
+      const existingIds = recommendedFoods.map((food) => food.id);
+
+      const additionalFoods = await this.foodRepository
+        .createQueryBuilder('food')
+        .leftJoinAndSelect('food.category', 'category')
+        .where('food.isAvailable = :isAvailable', { isAvailable: true })
+        .andWhere('food.id NOT IN (:...existingIds)', {
+          existingIds: existingIds.length > 0 ? existingIds : [0],
+        })
+        .orderBy('RAND()') // PostgreSQL
+        // Nếu sử dụng MySQL: .orderBy('RAND()')
+        .take(remainingCount)
+        .getMany();
+
+      recommendedFoods.push(...additionalFoods);
+    }
+
+    return recommendedFoods;
+  }
+
+  async findRandomFoodForYou(limit: number = 10): Promise<Food[]> {
+    // Lấy danh sách món ăn ngẫu nhiên có sẵn
+    const randomFoods = await this.foodRepository
+      .createQueryBuilder('food')
+      .leftJoinAndSelect('food.category', 'category')
+      .where('food.isAvailable = :isAvailable', { isAvailable: true })
+      .orderBy('RAND()') // Nếu dùng MySQL
+      // .orderBy('RANDOM()') // Nếu dùng PostgreSQL
+      .take(limit)
+      .getMany();
+
+    return randomFoods; // Trả về trực tiếp kết quả từ repository
+  }
 }

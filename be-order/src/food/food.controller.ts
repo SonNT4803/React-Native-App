@@ -5,18 +5,21 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  InternalServerErrorException,
   NotFoundException,
   Param,
   ParseIntPipe,
   Post,
   Put,
   UseGuards,
+  Query,
+  DefaultValuePipe,
 } from '@nestjs/common';
-import { FoodService } from './food.service';
-import { CreateFoodDto, UpdateFoodDto } from './dto/food.dto';
-import { RolesGuard } from '../auth/guard/roles.guard';
-import { Roles } from '../auth/guard/roles.decorator';
 import { Public } from '../auth/guard/public.decorator';
+import { Roles } from '../auth/guard/roles.decorator';
+import { RolesGuard } from '../auth/guard/roles.guard';
+import { CreateFoodDto, UpdateFoodDto } from './dto/food.dto';
+import { FoodService } from './food.service';
 
 @Controller('food')
 @UseGuards(RolesGuard)
@@ -63,34 +66,6 @@ export class FoodController {
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: error.message || 'Failed to retrieve foods',
-        data: null,
-      };
-    }
-  }
-
-  @Get(':id')
-  @Public()
-  async findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<{ statusCode: HttpStatus; message: string; data: any }> {
-    try {
-      const result = await this.foodService.findOne(id);
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Food retrieved successfully',
-        data: result,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        return {
-          statusCode: HttpStatus.NOT_FOUND,
-          message: error.message,
-          data: null,
-        };
-      }
-      return {
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message || 'Failed to retrieve food',
         data: null,
       };
     }
@@ -158,6 +133,56 @@ export class FoodController {
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: error.message || 'Failed to retrieve foods by category',
+        data: null,
+      };
+    }
+  }
+
+  @Get('recommended')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async getRecommendedFood(): Promise<{
+    statusCode: HttpStatus;
+    message: string;
+    data: any;
+  }> {
+    try {
+      const result = await this.foodService.findRecommendedFood();
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Recommended foods retrieved successfully',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to retrieve recommended foods',
+        data: null,
+      };
+    }
+  }
+
+  @Get('for-you')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async getFoodForYou(
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ): Promise<{
+    statusCode: HttpStatus;
+    message: string;
+    data: any;
+  }> {
+    try {
+      const result = await this.foodService.findRandomFoodForYou(limit);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Foods for you retrieved successfully',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to retrieve foods for you',
         data: null,
       };
     }
