@@ -95,7 +95,7 @@ export const styles = StyleSheet.create({
     marginRight: 15,
     backgroundColor: "#fff",
     borderRadius: 12,
-    shadowColor: "#grey",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -104,6 +104,8 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
   },
   foodImage: {
     width: "100%",
@@ -112,17 +114,23 @@ export const styles = StyleSheet.create({
   },
   foodInfo: {
     padding: 12,
+    backgroundColor: "#F9F9F9",
   },
   foodName: {
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 4,
   },
+  priceAddContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
+  },
   foodPrice: {
     fontSize: 14,
     color: "#FF6B6B",
     fontWeight: "bold",
-    marginBottom: 4,
   },
   soldCountContainer: {
     flexDirection: "row",
@@ -214,18 +222,15 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  foodCardPrice: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#FF6B6B",
-  },
-  addToCartButton: {
-    backgroundColor: "#FF6B6B",
+  addButton: {
     width: 30,
     height: 30,
     borderRadius: 15,
+    backgroundColor: "#F0F0F0",
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
   },
   outOfStock: {
     fontSize: 12,
@@ -253,5 +258,47 @@ export const styles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  // New styles for RecommendedFood component
+  recommendedCard: {
+    width: 300,
+    height: 100,
+    flexDirection: "row",
+    marginRight: 15,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+  },
+  recommendedImage: {
+    width: 100,
+    height: "100%",
+    resizeMode: "cover",
+  },
+  recommendedInfo: {
+    flex: 1,
+    padding: 12,
+    justifyContent: "space-between",
+    backgroundColor: "#F9F9F9",
+  },
+  recommendedName: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  recommendedPrice: {
+    fontSize: 14,
+    color: "#FF6B6B",
+    fontWeight: "bold",
   },
 });

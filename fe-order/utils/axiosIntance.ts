@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const apiEndpoint = "http://192.168.1.67:5000";
+const apiEndpoint = "http://192.168.1.62:5000";
 
 // Tạo một instance của Axios
 const axiosInstance: AxiosInstance = axios.create({

@@ -57,4 +57,30 @@ export const FoodService = {
       return [];
     }
   },
+
+  getRecommendedFoods: async (): Promise<Food[]> => {
+    try {
+      const response = await axiosInstance.get("/food/recommended");
+      if (response.data.statusCode === 200) {
+        return response.data.data;
+      }
+      return [];
+    } catch (error) {
+      console.error("Error fetching recommended foods:", error);
+      return [];
+    }
+  },
+
+  getForYouFoods: async (limit: number = 10): Promise<Food[]> => {
+    try {
+      const response = await axiosInstance.get(`/food/for-you?limit=${limit}`);
+      if (response.data.statusCode === 200) {
+        return response.data.data;
+      }
+      return [];
+    } catch (error) {
+      console.error("Error fetching for you foods:", error);
+      return [];
+    }
+  },
 };
