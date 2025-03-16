@@ -10,27 +10,43 @@ import { ThemedView } from "@/components/ThemedView";
 import { Category } from "@/models/category.models";
 import { CategoryService } from "@/services/category.services";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  View,
+  RefreshControl,
+} from "react-native";
 import { ForYouFood } from "@/components/home/ForYouFood";
 
 export default function HomeScreen() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await CategoryService.getAllCategories();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const data = await CategoryService.getAllCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchCategories();
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -40,26 +56,38 @@ export default function HomeScreen() {
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#FF6B6B"]}
+          />
+        }
       >
         {/* Categories */}
-        <View style={styles.categoriesContainer}>
-          {loading ? (
-            <ActivityIndicator size="large" color="#FF6B6B" />
-          ) : categories.length > 0 ? (
-            categories.map((category) => (
-              <CategoryItem
-                key={category.id}
-                title={category.name}
-                imageSource={category.image}
-                onPress={() =>
-                  console.log(`Selected category: ${category.name}`)
-                }
-              />
-            ))
-          ) : (
-            <ThemedText>Không có danh mục nào</ThemedText>
-          )}
+        <View style={styles.sectionContainer}>
+          <View style={styles.headerContainer}>
+            <ThemedText style={styles.sectionTitle}>Danh mục</ThemedText>
+          </View>
+          <View style={styles.categoriesContainer}>
+            {loading ? (
+              <ActivityIndicator size="large" color="#FF6B6B" />
+            ) : categories.length > 0 ? (
+              categories.map((category) => (
+                <CategoryItem
+                  key={category.id}
+                  title={category.name}
+                  imageSource={category.image}
+                  onPress={() =>
+                    console.log(`Selected category: ${category.name}`)
+                  }
+                />
+              ))
+            ) : (
+              <ThemedText>Không có danh mục nào</ThemedText>
+            )}
+          </View>
         </View>
 
         <BestSeller />
@@ -69,9 +97,11 @@ export default function HomeScreen() {
         <ForYouFood />
 
         {/* Popular */}
-        <View style={[styles.sectionContainer, { paddingHorizontal: 16 }]}>
-          <ThemedText style={styles.sectionTitle}>Popular</ThemedText>
-          <View style={{ marginTop: 12 }}>
+        <View style={styles.sectionContainer}>
+          <View style={styles.headerContainer}>
+            <ThemedText style={styles.sectionTitle}>Popular</ThemedText>
+          </View>
+          <View style={{ paddingHorizontal: 16, marginTop: 8 }}>
             <PopularItem title="Maharaja Mac" />
             <PopularItem title="Cheese Pizza" />
           </View>

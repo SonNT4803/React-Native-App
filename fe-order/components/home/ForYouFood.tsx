@@ -13,6 +13,8 @@ import { FoodService } from "@/services/food.services";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Food } from "@/models/food.models";
+import { useCartStore } from "@/services/cart.services";
+import Toast from "react-native-toast-message";
 
 export const ForYouFood = () => {
   const [forYouFoods, setForYouFoods] = useState<Food[]>([]);
@@ -22,6 +24,7 @@ export const ForYouFood = () => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const router = useRouter();
+  const { addToCart } = useCartStore();
 
   useEffect(() => {
     loadForYouFoods();
@@ -47,8 +50,16 @@ export const ForYouFood = () => {
     setShowRightIndicator(xOffset < contentWidth - layoutWidth - 10);
   };
 
-  const handleFoodPress = (foodId: number) => {
-    // router.push(`/food/${foodId}`);
+  const handleFoodPress = (food: Food) => {
+    addToCart(food, (name) => {
+      Toast.show({
+        type: "success",
+        text1: "Thêm vào giỏ hàng thành công",
+        text2: `Đã thêm ${name} vào giỏ hàng`,
+        position: "bottom",
+        visibilityTime: 2000,
+      });
+    });
   };
 
   const handleSeeAllPress = () => {
@@ -101,7 +112,7 @@ export const ForYouFood = () => {
             <TouchableOpacity
               key={item.id}
               style={styles.bestSellerCard}
-              onPress={() => handleFoodPress(item.id)}
+              onPress={() => handleFoodPress(item)}
               activeOpacity={0.7}
             >
               <Image
@@ -116,7 +127,13 @@ export const ForYouFood = () => {
                   <ThemedText style={styles.foodPrice}>
                     {formatPrice(item.price)}
                   </ThemedText>
-                  <TouchableOpacity style={styles.addButton}>
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      handleFoodPress(item);
+                    }}
+                  >
                     <Ionicons name="add" size={20} color="#2C3E50" />
                   </TouchableOpacity>
                 </View>

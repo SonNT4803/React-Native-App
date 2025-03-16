@@ -65,30 +65,40 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: "#000",
   },
+  // Update the section container to remove excessive padding
   sectionContainer: {
-    marginVertical: 15,
+    marginVertical: 16,
+    width: "100%",
   },
+  // Improve the header container with better spacing
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 15,
-    marginBottom: 10,
+    marginBottom: 12,
+    paddingHorizontal: 16,
   },
+  // Make section titles more prominent
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#333",
   },
+  // Make the "See All" text more noticeable
   seeAll: {
-    fontWeight: "bold",
     fontSize: 14,
     color: "#FF6B6B",
+    fontWeight: "500",
   },
+  // Improve the scroll container to take full width
   scrollContainer: {
     position: "relative",
+    width: "100%",
   },
+  // Adjust the scroll view content for better spacing
   scrollViewContent: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   bestSellerCard: {
     width: 160,
@@ -300,5 +310,20 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: "#FF6B6B",
     fontWeight: "bold",
+  },
+
+  // Add animation styles
+  animatedItem: {
+    position: "absolute",
+    zIndex: 999,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    overflow: "hidden",
+  },
+  animatedImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
 });

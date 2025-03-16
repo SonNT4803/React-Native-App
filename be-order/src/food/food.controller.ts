@@ -47,6 +47,35 @@ export class FoodController {
     }
   }
 
+  @Get('food/:id')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ statusCode: HttpStatus; message: string; data: any }> {
+    try {
+      const result = await this.foodService.findOne(id);
+      if (!result) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: 'Food not found',
+          data: null,
+        };
+      }
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Food retrieved successfully',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to retrieve food',
+        data: null,
+      };
+    }
+  }
+
   @Get()
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -138,7 +167,7 @@ export class FoodController {
     }
   }
 
-  @Get('recommended')
+  @Get('/recommended')
   @Public()
   @HttpCode(HttpStatus.OK)
   async getRecommendedFood(): Promise<{

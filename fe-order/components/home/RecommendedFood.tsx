@@ -13,6 +13,8 @@ import { FoodService } from "@/services/food.services";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Food } from "@/models/food.models";
+import { useCartStore } from "@/services/cart.services";
+import Toast from "react-native-toast-message";
 
 export const RecommendedFood = () => {
   const [recommendedFoods, setRecommendedFoods] = useState<Food[]>([]);
@@ -22,6 +24,7 @@ export const RecommendedFood = () => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const router = useRouter();
+  const { addToCart } = useCartStore();
 
   useEffect(() => {
     loadRecommendedFoods();
@@ -47,8 +50,29 @@ export const RecommendedFood = () => {
     setShowRightIndicator(xOffset < contentWidth - layoutWidth - 10);
   };
 
-  const handleFoodPress = (foodId: number) => {
-    // router.push(`/food/${foodId}`);
+  const handleFoodPress = (food: Food) => {
+    addToCart(food, (name) => {
+      Toast.show({
+        type: "success",
+        text1: "Thêm vào giỏ hàng thành công",
+        text2: `Đã thêm ${name} vào giỏ hàng`,
+        position: "bottom",
+        visibilityTime: 2000,
+      });
+    });
+  };
+
+  // Update the handleAddToCart function to show Toast notification
+  const handleAddToCart = (food: Food) => {
+    addToCart(food, (name) => {
+      Toast.show({
+        type: "success",
+        text1: "Thêm vào giỏ hàng thành công",
+        text2: `Đã thêm ${name} vào giỏ hàng`,
+        position: "bottom",
+        visibilityTime: 2000,
+      });
+    });
   };
 
   const handleSeeAllPress = () => {
@@ -101,7 +125,7 @@ export const RecommendedFood = () => {
             <TouchableOpacity
               key={item.id}
               style={styles.recommendedCard}
-              onPress={() => handleFoodPress(item.id)}
+              onPress={() => handleFoodPress(item)}
               activeOpacity={0.7}
             >
               <Image
@@ -116,7 +140,13 @@ export const RecommendedFood = () => {
                   <ThemedText style={styles.recommendedPrice}>
                     {formatPrice(item.price)}
                   </ThemedText>
-                  <TouchableOpacity style={styles.addButton}>
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={(e) => {
+                      e.stopPropagation(); // Prevent triggering the parent TouchableOpacity
+                      handleAddToCart(item);
+                    }}
+                  >
                     <Ionicons name="add" size={20} color="#2C3E50" />
                   </TouchableOpacity>
                 </View>

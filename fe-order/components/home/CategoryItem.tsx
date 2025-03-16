@@ -1,7 +1,6 @@
 import React from "react";
-import { TouchableOpacity, Image } from "react-native";
+import { TouchableOpacity, Image, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { styles } from "./styles";
 
 interface CategoryItemProps {
   title: string;
@@ -28,3 +27,25 @@ export const CategoryItem = ({
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  categoryItem: {
+    alignItems: "center",
+    marginHorizontal: 8,
+    marginBottom: 16,
+    width: 80,
+  },
+  categoryImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FFE8E8",
+    marginBottom: 8,
+  },
+  categoryText: {
+    fontSize: 12,
+    textAlign: "center",
+    color: "#333",
+    fontWeight: "500",
+  },
+});
