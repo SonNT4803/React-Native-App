@@ -27,7 +27,6 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  @Roles('Customer')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createOrderDto: CreateOrderDto,

@@ -16,7 +16,7 @@ export const ProfileScreen = () => {
   return (
     <View>
       <Text>Email: {user.email}</Text>
-      <Text>User ID: {user.sub}</Text>
+      <Text>User ID: {user.id}</Text>
       <Text>Roles: {user.role.join(", ")}</Text>
     </View>
   );

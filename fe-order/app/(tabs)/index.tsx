@@ -1,7 +1,6 @@
 import { BestSeller } from "@/components/home/BestSeller";
 import { CategoryItem } from "@/components/home/CategoryItem";
 import { Header } from "@/components/home/Header";
-import { PopularItem } from "@/components/home/PopularItem";
 import { RecommendedFood } from "@/components/home/RecommendedFood";
 import { SearchBar } from "@/components/home/SearchBar";
 import { styles } from "@/components/home/styles";
@@ -95,17 +94,6 @@ export default function HomeScreen() {
         <RecommendedFood />
 
         <ForYouFood />
-
-        {/* Popular */}
-        <View style={styles.sectionContainer}>
-          <View style={styles.headerContainer}>
-            <ThemedText style={styles.sectionTitle}>Popular</ThemedText>
-          </View>
-          <View style={{ paddingHorizontal: 16, marginTop: 8 }}>
-            <PopularItem title="Maharaja Mac" />
-            <PopularItem title="Cheese Pizza" />
-          </View>
-        </View>
       </ScrollView>
     </ThemedView>
   );

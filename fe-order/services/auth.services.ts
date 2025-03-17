@@ -97,7 +97,7 @@ class AuthService {
       if (!decoded) return null;
 
       return {
-        id: decoded.sub,
+        id: decoded.id,
         email: decoded.email,
         role: decoded.role,
       };

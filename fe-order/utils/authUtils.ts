@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 
 interface DecodedToken {
   email: string;
-  sub: number; // user id
+  id: number; // user id
   role: string[];
   iat: number;
   exp: number;
@@ -30,7 +30,7 @@ export const isTokenExpired = (token: string): boolean => {
 
 export const getUserId = (token: string): number | null => {
   const decoded = getUserFromToken(token);
-  return decoded ? decoded.sub : null;
+  return decoded ? decoded.id : null;
 };
 
 export const getUserEmail = (token: string): string | null => {

@@ -1,24 +1,52 @@
-import React, { useState } from "react";
-import {
-  View,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-} from "react-native";
+import { styles } from "@/components/cart/styles";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { Order } from "@/models/order.models";
 import { useCartStore } from "@/services/cart.services";
+import { getUserId } from "@/utils/authUtils";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import * as Animatable from "react-native-animatable";
+import { showMessage } from "react-native-flash-message";
+import { orderService } from "../../services/order.services";
 
 export default function CartScreen() {
   const router = useRouter();
-  const [orderInstructions, setOrderInstructions] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [orderNote, setOrderNote] = useState("");
+  const [userId, setUserId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
-  // Use the cart store
-  const { items, updateQuantity, removeFromCart, getSubtotal } = useCartStore();
+  const { items, updateQuantity, removeFromCart, getSubtotal, clearCart } =
+    useCartStore();
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const token = await AsyncStorage.getItem("accessToken");
+        if (token) {
+          const id = getUserId(token);
+          setUserId(id);
+        }
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
 
   const calculateTotal = () => {
     return getSubtotal();
@@ -28,17 +56,137 @@ export default function CartScreen() {
     return `${price.toFixed(2)}`;
   };
 
-  const handleCheckout = () => {
-    // Implement checkout logic
-    console.log("Proceeding to checkout");
+  const handleCheckout = async () => {
+    try {
+      if (!userId) {
+        showMessage({
+          message: "Chưa đăng nhập",
+          description: "Vui lòng đăng nhập để tiếp tục thanh toán",
+          type: "warning",
+        });
+        return;
+      }
+
+      if (!deliveryAddress || deliveryAddress.trim() === "") {
+        Alert.alert(
+          "Địa chỉ giao hàng trống",
+          "Vui lòng nhập địa chỉ giao hàng để tiếp tục thanh toán",
+          [{ text: "OK" }]
+        );
+        return;
+      }
+
+      Alert.alert(
+        "Xác nhận đặt hàng",
+        "Bạn có chắc chắn muốn đặt đơn hàng này không?",
+        [
+          {
+            text: "Hủy",
+            style: "cancel",
+          },
+          {
+            text: "Đồng ý",
+            onPress: async () => {
+              try {
+                setIsLoading(true);
+
+                const orderData: Order = {
+                  userId: userId,
+                  items: items.map((item) => ({
+                    foodId: item.id,
+                    quantity: item.quantity,
+                    price: item.price,
+                  })),
+                  totalAmount: calculateTotal(),
+                  status: "pending",
+                  deliveryAddress: deliveryAddress,
+                };
+
+                if (orderNote) {
+                  (orderData as any).note = orderNote;
+                }
+
+                const result = await orderService.checkout(orderData);
+
+                if (result) {
+                  await clearCart();
+
+                  setOrderSuccess(true);
+                  setIsLoading(false);
+
+                  setTimeout(() => {
+                    showMessage({
+                      message: "Đặt hàng thành công!",
+                      description:
+                        "Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đang được xử lý.",
+                      type: "success",
+                      duration: 3000,
+                    });
+
+                    setOrderSuccess(false);
+                    router.push("/");
+                  }, 2000);
+                }
+              } catch (error) {
+                setIsLoading(false);
+                console.error("Checkout error:", error);
+                showMessage({
+                  message: "Đặt hàng thất bại",
+                  description:
+                    "Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau.",
+                  type: "danger",
+                });
+              }
+            },
+          },
+        ]
+      );
+    } catch (error) {
+      console.error("Checkout error:", error);
+      showMessage({
+        message: "Đặt hàng thất bại",
+        description: "Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau.",
+        type: "danger",
+      });
+    }
   };
 
   const handleBrowseFood = () => {
-    // router.push("/(tabs)/");
+    router.push("/all-foods");
   };
 
   return (
     <ThemedView style={styles.container}>
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#FF6B6B" />
+          <ThemedText style={styles.loadingText}>
+            Đang xử lý đơn hàng...
+          </ThemedText>
+        </View>
+      )}
+
+      {orderSuccess && (
+        <View style={styles.successOverlay}>
+          <Animatable.View
+            animation="zoomIn"
+            duration={800}
+            style={styles.successAnimationContainer}
+          >
+            <Animatable.View animation="bounceIn" delay={400} duration={800}>
+              <Ionicons name="checkmark-circle" size={100} color="#4CAF50" />
+            </Animatable.View>
+            <Animatable.Text
+              animation="fadeIn"
+              delay={1000}
+              style={styles.successText}
+            >
+              Đặt hàng thành công!
+            </Animatable.Text>
+          </Animatable.View>
+        </View>
+      )}
+
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -47,7 +195,7 @@ export default function CartScreen() {
           <Ionicons name="arrow-back" size={24} color="#FF6B6B" />
         </TouchableOpacity>
         <ThemedText style={styles.headerTitle}>
-          {items.length > 0 ? `${items.length} items in cart` : "Your Cart"}
+          {items.length > 0 ? `${items.length} items in cart` : "Giỏ hàng"}
         </ThemedText>
         <View style={{ width: 24 }} />
       </View>
@@ -56,17 +204,17 @@ export default function CartScreen() {
         <View style={styles.emptyCartContainer}>
           <Ionicons name="cart-outline" size={80} color="#CCCCCC" />
           <ThemedText style={styles.emptyCartTitle}>
-            Your cart is empty
+            Giỏ hàng của bạn đang trông
           </ThemedText>
           <ThemedText style={styles.emptyCartText}>
-            Looks like you haven't added any items to your cart yet.
+            Có vẻ như bạn chưa thêm bất kỳ mặt hàng nào vào giỏ hàng của mình.
           </ThemedText>
           <TouchableOpacity
             style={styles.browseFoodButton}
             onPress={handleBrowseFood}
           >
             <ThemedText style={styles.browseFoodButtonText}>
-              Browse Food
+              Tìm kiếm món ăn
             </ThemedText>
           </TouchableOpacity>
         </View>
@@ -112,15 +260,18 @@ export default function CartScreen() {
 
             <View style={styles.instructionsContainer}>
               <ThemedText style={styles.sectionTitle}>
-                Order Instructions
+                Địa chỉ giao hàng{" "}
+                <ThemedText style={styles.requiredField}>*</ThemedText>
               </ThemedText>
               <TextInput
                 style={styles.instructionsInput}
-                placeholder="Type Here......"
+                placeholder="Nhập địa chỉ giao hàng..."
                 placeholderTextColor="#999"
                 multiline
-                value={orderInstructions}
-                onChangeText={setOrderInstructions}
+                value={deliveryAddress}
+                onChangeText={(text) => {
+                  setDeliveryAddress(text);
+                }}
               />
             </View>
 
@@ -146,15 +297,30 @@ export default function CartScreen() {
                 </ThemedText>
               </View>
             </View>
+
+            <View style={styles.instructionsContainer}>
+              <ThemedText style={styles.sectionTitle}>
+                Ghi chú đơn hàng
+              </ThemedText>
+              <TextInput
+                style={styles.instructionsInput}
+                placeholder="Ghi chú thêm về đơn hàng của bạn..."
+                placeholderTextColor="#999"
+                multiline
+                value={orderNote}
+                onChangeText={setOrderNote}
+              />
+            </View>
           </ScrollView>
 
           <View style={styles.checkoutContainer}>
             <TouchableOpacity
               style={styles.checkoutButton}
               onPress={handleCheckout}
+              disabled={items.length === 0}
             >
               <ThemedText style={styles.checkoutButtonText}>
-                Checkout
+                Thanh toán
               </ThemedText>
             </TouchableOpacity>
           </View>
@@ -163,195 +329,3 @@ export default function CartScreen() {
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 100,
-  },
-  cartItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
-  },
-  itemImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    backgroundColor: "#F5F5F5",
-  },
-  itemDetails: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  itemPrice: {
-    fontSize: 16,
-    color: "#FF6B6B",
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  quantityContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  quantityButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-  },
-  quantityText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginHorizontal: 12,
-  },
-  removeButton: {
-    padding: 8,
-  },
-  instructionsContainer: {
-    marginTop: 24,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 12,
-  },
-  instructionsInput: {
-    backgroundColor: "#F5F5F5",
-    borderRadius: 12,
-    padding: 16,
-    height: 100,
-    textAlignVertical: "top",
-    fontSize: 16,
-  },
-  billContainer: {
-    marginBottom: 24,
-  },
-  billRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  billLabelWithIcon: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  billLabel: {
-    fontSize: 16,
-    color: "#666",
-    marginLeft: 8,
-  },
-  billValue: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  totalRow: {
-    borderTopWidth: 1,
-    borderTopColor: "#F0F0F0",
-    paddingTop: 12,
-    marginTop: 8,
-  },
-  totalLabel: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  totalValue: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FF6B6B",
-  },
-  checkoutContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#F0F0F0",
-  },
-  checkoutButton: {
-    backgroundColor: "#FF6B6B",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  checkoutButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  emptyCartContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 30,
-  },
-  emptyCartTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  emptyCartText: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 30,
-  },
-  browseFoodButton: {
-    backgroundColor: "#FF6B6B",
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 30,
-    alignItems: "center",
-  },
-  browseFoodButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
