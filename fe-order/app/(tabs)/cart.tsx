@@ -222,7 +222,10 @@ export default function CartScreen() {
         <>
           <ScrollView
             style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={[
+              styles.scrollContent,
+              { paddingBottom: 120 } // Add extra padding at the bottom to prevent tab bar overlap
+            ]}
             showsVerticalScrollIndicator={false}
           >
             {items.map((item) => (
@@ -313,7 +316,7 @@ export default function CartScreen() {
             </View>
           </ScrollView>
 
-          <View style={styles.checkoutContainer}>
+          <View style={[styles.checkoutContainer, { marginBottom: 70 }]}>
             <TouchableOpacity
               style={styles.checkoutButton}
               onPress={handleCheckout}
