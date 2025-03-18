@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Food } from "@/models/food.models";
 import { useCartStore } from "@/services/cart.services";
 import Toast from "react-native-toast-message";
+import { formartPrice } from "@/constants/FormatPrice";
 
 export const ForYouFood = () => {
   const [forYouFoods, setForYouFoods] = useState<Food[]>([]);
@@ -64,10 +65,6 @@ export const ForYouFood = () => {
 
   const handleSeeAllPress = () => {
     router.push("/all-foods");
-  };
-
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString("vi-VN")}đ`;
   };
 
   if (loading) {
@@ -125,7 +122,7 @@ export const ForYouFood = () => {
                 </ThemedText>
                 <View style={styles.priceAddContainer}>
                   <ThemedText style={styles.foodPrice}>
-                    {formatPrice(item.price)}
+                    {formartPrice(item.price)}
                   </ThemedText>
                   <TouchableOpacity
                     style={styles.addButton}

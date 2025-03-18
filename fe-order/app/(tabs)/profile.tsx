@@ -9,7 +9,7 @@ import {
 import { useRouter } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { styles as profileStyles } from "@/components/profile/styles";
+import { styles as profileStyles } from "@/assets/profile/styles";
 import { authService } from "@/services/auth.services";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 

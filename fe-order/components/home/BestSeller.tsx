@@ -14,6 +14,7 @@ import { FoodService } from "@/services/food.services";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Food } from "@/models/food.models";
+import { formartPrice } from "@/constants/FormatPrice";
 
 export const BestSeller = () => {
   const [bestSellers, setBestSellers] = useState<Food[]>([]);
@@ -49,18 +50,11 @@ export const BestSeller = () => {
   };
 
   const handleFoodPress = (foodId: number) => {
-    // router.push(`/food/${foodId}`);
+    router.push(`/detail?id=${foodId}`);
   };
 
   const handleSeeAllPress = () => {
     router.push("/all-foods");
-  };
-
-  const formatPrice = (price: number) => {
-    return price.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
   };
 
   if (loading) {
@@ -117,7 +111,7 @@ export const BestSeller = () => {
                   {item.name}
                 </ThemedText>
                 <ThemedText style={styles.foodPrice}>
-                  {formatPrice(item.price)}
+                  {formartPrice(item.price)}
                 </ThemedText>
                 <View style={styles.soldCountContainer}>
                   <Ionicons name="flame" size={14} color="#FF6B6B" />

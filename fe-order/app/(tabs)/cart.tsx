@@ -1,4 +1,3 @@
-import { styles } from "@/components/cart/styles";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Order } from "@/models/order.models";
@@ -20,6 +19,8 @@ import {
 import * as Animatable from "react-native-animatable";
 import { showMessage } from "react-native-flash-message";
 import { orderService } from "../../services/order.services";
+import { styles } from "@/assets/cart/styles";
+import { formartPrice } from "@/constants/FormatPrice";
 
 export default function CartScreen() {
   const router = useRouter();
@@ -51,11 +52,6 @@ export default function CartScreen() {
   const calculateTotal = () => {
     return getSubtotal();
   };
-
-  const formatPrice = (price: number) => {
-    return `${price.toFixed(2)}`;
-  };
-
   const handleCheckout = async () => {
     try {
       if (!userId) {
@@ -233,7 +229,9 @@ export default function CartScreen() {
                 <Image source={{ uri: item.image }} style={styles.itemImage} />
                 <View style={styles.itemDetails}>
                   <ThemedText style={styles.itemName}>{item.name}</ThemedText>
-                  <ThemedText style={styles.itemPrice}>{item.price}</ThemedText>
+                  <ThemedText style={styles.itemPrice}>
+                    {formartPrice(item.price)}
+                  </ThemedText>
                   <View style={styles.quantityContainer}>
                     <TouchableOpacity
                       style={styles.quantityButton}
@@ -285,7 +283,7 @@ export default function CartScreen() {
               <View style={styles.billRow}>
                 <ThemedText style={styles.billLabel}>Sub-Total</ThemedText>
                 <ThemedText style={styles.billValue}>
-                  {formatPrice(getSubtotal())}
+                  {formartPrice(getSubtotal())}
                 </ThemedText>
               </View>
               <View style={styles.billRow}>
@@ -298,7 +296,7 @@ export default function CartScreen() {
               <View style={[styles.billRow, styles.totalRow]}>
                 <ThemedText style={styles.totalLabel}>Tổng tiền</ThemedText>
                 <ThemedText style={styles.totalValue}>
-                  {formatPrice(calculateTotal())}
+                  {formartPrice(calculateTotal())}
                 </ThemedText>
               </View>
             </View>

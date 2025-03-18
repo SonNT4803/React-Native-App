@@ -7,7 +7,7 @@ export class Food extends BaseEntity {
   @Column()
   name: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column()
   price: number;
 
   @Column({ nullable: true })

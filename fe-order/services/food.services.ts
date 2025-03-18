@@ -17,9 +17,9 @@ export const FoodService = {
   },
 
   // Get food by ID
-  getFoodById: async (id: number | string[]): Promise<Food | null> => {
+  getFoodById: async (id: number): Promise<Food | null> => {
     try {
-      const response = await axiosInstance.get(`/food/${id}`);
+      const response = await axiosInstance.get(`/food/food/${id}`);
       if (response.data.statusCode === 200) {
         return response.data.data;
       }

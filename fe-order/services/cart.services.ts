@@ -52,7 +52,7 @@ export const useCartStore = create<CartStore>()(
             ],
           });
         }
-        
+
         // Call the success callback if provided
         if (onSuccess) {
           onSuccess(food.name);

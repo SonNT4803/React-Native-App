@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Food } from "@/models/food.models";
 import { useCartStore } from "@/services/cart.services";
 import Toast from "react-native-toast-message";
+import { formartPrice } from "@/constants/FormatPrice";
 
 export const RecommendedFood = () => {
   const [recommendedFoods, setRecommendedFoods] = useState<Food[]>([]);
@@ -79,10 +80,6 @@ export const RecommendedFood = () => {
     router.push("/all-foods");
   };
 
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString("vi-VN")}đ`;
-  };
-
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -138,7 +135,7 @@ export const RecommendedFood = () => {
                 </ThemedText>
                 <View style={styles.priceAddContainer}>
                   <ThemedText style={styles.recommendedPrice}>
-                    {formatPrice(item.price)}
+                    {formartPrice(item.price)}
                   </ThemedText>
                   <TouchableOpacity
                     style={styles.addButton}

@@ -18,6 +18,7 @@ import { useCartStore } from "@/services/cart.services";
 import { showMessage } from "react-native-flash-message";
 import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
+import { formartPrice } from "@/constants/FormatPrice";
 
 const { width } = Dimensions.get("window");
 const cardWidth = (width - 48) / 2;
@@ -47,10 +48,6 @@ export default function AllFoodsScreen() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString("vi-VN")}đ`;
   };
 
   const handleFoodPress = (foodId: number) => {
@@ -106,7 +103,7 @@ export default function AllFoodsScreen() {
           </ThemedText>
           <View style={styles.foodCardFooter}>
             <ThemedText style={styles.foodCardPrice}>
-              {formatPrice(item.price)}
+              {formartPrice(item.price)}
             </ThemedText>
             <TouchableOpacity
               style={styles.addToCartButton}
