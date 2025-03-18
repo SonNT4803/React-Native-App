@@ -30,6 +30,7 @@ export default function HomeScreen() {
     try {
       setLoading(true);
       const data = await CategoryService.getAllCategories();
+      console.log(data);
       setCategories(data);
     } catch (error) {
       console.error("Error fetching categories:", error);

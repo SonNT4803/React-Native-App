@@ -224,7 +224,7 @@ export default function CartScreen() {
             style={styles.scrollView}
             contentContainerStyle={[
               styles.scrollContent,
-              { paddingBottom: 120 } // Add extra padding at the bottom to prevent tab bar overlap
+              { paddingBottom: 120 }, // Add extra padding at the bottom to prevent tab bar overlap
             ]}
             showsVerticalScrollIndicator={false}
           >
@@ -279,7 +279,9 @@ export default function CartScreen() {
             </View>
 
             <View style={styles.billContainer}>
-              <ThemedText style={styles.sectionTitle}>Bill Summary</ThemedText>
+              <ThemedText style={styles.sectionTitle}>
+                Hoá đơn thanh toán
+              </ThemedText>
               <View style={styles.billRow}>
                 <ThemedText style={styles.billLabel}>Sub-Total</ThemedText>
                 <ThemedText style={styles.billValue}>
@@ -289,12 +291,12 @@ export default function CartScreen() {
               <View style={styles.billRow}>
                 <View style={styles.billLabelWithIcon}>
                   <Ionicons name="bicycle-outline" size={16} color="#666" />
-                  <ThemedText style={styles.billLabel}>Delivery</ThemedText>
+                  <ThemedText style={styles.billLabel}>Giao hàng</ThemedText>
                 </View>
                 <ThemedText style={styles.billValue}>Free Ship</ThemedText>
               </View>
               <View style={[styles.billRow, styles.totalRow]}>
-                <ThemedText style={styles.totalLabel}>Grand Total</ThemedText>
+                <ThemedText style={styles.totalLabel}>Tổng tiền</ThemedText>
                 <ThemedText style={styles.totalValue}>
                   {formatPrice(calculateTotal())}
                 </ThemedText>
