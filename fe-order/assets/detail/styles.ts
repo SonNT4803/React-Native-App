@@ -35,6 +35,22 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  homeBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   favoriteBtn: {
     width: 40,
     height: 40,

@@ -193,4 +193,38 @@ export class OrdersService {
       orderCount: parseInt(item.orderCount),
     }));
   }
+
+  async getOrderHistory(userId: number): Promise<Order[]> {
+    // Check if user exists
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    // Get all orders for the user, ordered by date (newest first)
+    const orders = await this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.orderDetails', 'orderDetail')
+      .leftJoinAndSelect('orderDetail.food', 'food')
+      .select([
+        'order.id',
+        'order.orderDate',
+        'order.totalAmount',
+        'order.status',
+        'order.deliveryAddress',
+        'order.note',
+        'orderDetail.id',
+        'orderDetail.quantity',
+        'orderDetail.price',
+        'food.id',
+        'food.name',
+        'food.price',
+        'food.image',
+      ])
+      .where('order.user.id = :userId', { userId })
+      .orderBy('order.orderDate', 'DESC')
+      .getMany();
+
+    return orders;
+  }
 }

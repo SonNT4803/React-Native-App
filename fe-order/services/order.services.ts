@@ -19,4 +19,16 @@ export const orderService = {
       throw error;
     }
   },
+
+  getOrderHistory: async (userId?: number) => {
+    try {
+      const url = userId
+        ? `/orders/history?userId=${userId}`
+        : "/orders/history";
+      const response = await axiosInstance.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

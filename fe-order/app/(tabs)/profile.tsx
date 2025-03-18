@@ -31,7 +31,6 @@ export default function ProfileScreen() {
   const loadUserData = async () => {
     try {
       setLoading(true);
-      // Sử dụng hàm mới để lấy thông tin người dùng từ token
       const userData = await authService.getUserFromToken();
       setUser(userData);
     } catch (error) {
@@ -56,6 +55,14 @@ export default function ProfileScreen() {
         style: "destructive",
       },
     ]);
+  };
+
+  const navigateToOrderHistory = () => {
+    router.push("/order-history");
+  };
+
+  const navigateToEditProfile = () => {
+    router.push("/edit-profile");
   };
 
   if (loading) {
@@ -102,12 +109,18 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={navigateToEditProfile}
+        >
           <IconSymbol name="person.fill" size={24} color="#FF6B6B" />
           <ThemedText style={styles.menuText}>Thông tin cá nhân</ThemedText>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={navigateToOrderHistory}
+        >
           <IconSymbol name="cart.fill" size={24} color="#FF6B6B" />
           <ThemedText style={styles.menuText}>Lịch sử đơn hàng</ThemedText>
         </TouchableOpacity>

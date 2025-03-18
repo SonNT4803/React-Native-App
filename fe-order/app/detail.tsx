@@ -58,14 +58,8 @@ export default function FoodDetailScreen() {
     router.back();
   };
 
-  const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  const handleIncreaseQuantity = () => {
-    setQuantity(quantity + 1);
+  const navigateToHome = () => {
+    router.push("/");
   };
 
   const handleAddToCart = () => {
@@ -139,6 +133,9 @@ export default function FoodDetailScreen() {
         <TouchableOpacity style={styles.backBtn} onPress={handleGoBack}>
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
+        <TouchableOpacity style={styles.homeBtn} onPress={navigateToHome}>
+          <Ionicons name="home-outline" size={24} color="#333" />
+        </TouchableOpacity>
         <TouchableOpacity style={styles.favoriteBtn}>
           <Ionicons name="heart-outline" size={24} color="#FF6B6B" />
         </TouchableOpacity>
@@ -187,25 +184,6 @@ export default function FoodDetailScreen() {
             <View style={styles.featureItem}>
               <Ionicons name="time-outline" size={22} color="#FFC107" />
               <ThemedText style={styles.featureText}>15-20 min</ThemedText>
-            </View>
-          </View>
-
-          {/* Quantity Selector */}
-          <View style={styles.quantityContainer}>
-            <View style={styles.quantityControls}>
-              <TouchableOpacity
-                style={styles.quantityButton}
-                onPress={handleDecreaseQuantity}
-              >
-                <Ionicons name="remove" size={20} color="#333" />
-              </TouchableOpacity>
-              <ThemedText style={styles.quantityText}>{quantity}</ThemedText>
-              <TouchableOpacity
-                style={styles.quantityButton}
-                onPress={handleIncreaseQuantity}
-              >
-                <Ionicons name="add" size={20} color="#333" />
-              </TouchableOpacity>
             </View>
           </View>
 

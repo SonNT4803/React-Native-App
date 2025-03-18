@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserDTO } from 'src/auth/dto/user.dto';
 import { Role } from 'src/entities/role.entity';
@@ -69,5 +69,52 @@ export class UserService {
     return this.userRepository.findOne({
       where: { email: email },
     });
+  }
+
+  async updateUser(
+    id: number,
+    updateData: {
+      firstName?: string; // Fixed typo from fistName to firstName
+      lastName?: string;
+      phoneNumber?: string;
+      address?: string;
+      avatar?: string;
+    },
+  ) {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    // Update fields
+    if (updateData.firstName) user.firstName = updateData.firstName; // Added firstName update
+    if (updateData.lastName) user.lastName = updateData.lastName; // Added lastName update
+    if (updateData.phoneNumber) user.phone = updateData.phoneNumber;
+    if (updateData.address) user.address = updateData.address;
+    // if (updateData.avatar) user.avatar = updateData.avatar;           // Added avatar update
+    // Note: avatar handling would typically involve file uploads
+    // For simplicity, we're assuming avatar is a URL string
+
+    await this.userRepository.save(user);
+
+    // Return updated user with roles
+    const userRoles = await this.userRoleService.findUserRoleById(user.id);
+    const roles = userRoles.map((userRole) => userRole.role.name);
+
+    return {
+      statusCode: 200,
+      message: 'User updated successfully',
+      data: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName, // Fixed typo from fistName to firstName
+        lastName: user.lastName,
+        phoneNumber: user.phone,
+        address: user.address,
+        // avatar: user.avatar,        // Added avatar to response
+        role: roles,
+      },
+    };
   }
 }

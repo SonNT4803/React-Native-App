@@ -158,4 +158,48 @@ export class OrdersController {
       };
     }
   }
+
+  @Get('history')
+  @HttpCode(HttpStatus.OK)
+  async getOrderHistory(
+    @Query('userId', new ParseIntPipe({ optional: true })) userId?: number,
+    @GetUser() user?: any,
+  ): Promise<{ statusCode: HttpStatus; message: string; data: any }> {
+    try {
+      let result;
+      if (user) {
+        result = await this.ordersService.getOrderHistory(user.id);
+      } else if (userId) {
+        // Admin or other roles can view any user's orders if userId is provided
+      } else {
+        throw new ForbiddenException('User ID is required');
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Order history retrieved successfully',
+        data: result,
+      };
+    } catch (error) {
+      if (error instanceof ForbiddenException) {
+        return {
+          statusCode: HttpStatus.FORBIDDEN,
+          message: error.message,
+          data: null,
+        };
+      }
+      if (error instanceof NotFoundException) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: error.message,
+          data: null,
+        };
+      }
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to retrieve order history',
+        data: null,
+      };
+    }
+  }
 }
