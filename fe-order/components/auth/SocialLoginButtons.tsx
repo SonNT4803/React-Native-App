@@ -1,6 +1,7 @@
-import React from "react";
-import { View, TouchableOpacity, Image } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
+import React from "react";
+import { TouchableOpacity, View } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome"; // Import icon thư viện
 import { styles } from "./styles";
 
 export const SocialLoginButtons = () => {
@@ -8,16 +9,19 @@ export const SocialLoginButtons = () => {
     <View style={styles.socialButtonsContainer}>
       <TouchableOpacity style={styles.socialButton}>
         <View style={styles.socialIconContainer}>
-          {/* Replace with actual Google icon */}
-          <View style={[styles.socialIcon, { backgroundColor: "#DB4437" }]} />
+          <Icon name="google" size={24} color="red" style={styles.socialIcon} />
         </View>
         <ThemedText style={styles.socialButtonText}>Google</ThemedText>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.socialButton}>
         <View style={styles.socialIconContainer}>
-          {/* Replace with actual Facebook icon */}
-          <View style={[styles.socialIcon, { backgroundColor: "#4267B2" }]} />
+          <Icon
+            name="facebook"
+            size={24}
+            color="blue"
+            style={styles.socialIcon}
+          />
         </View>
         <ThemedText style={styles.socialButtonText}>Facebook</ThemedText>
       </TouchableOpacity>
