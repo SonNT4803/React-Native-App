@@ -124,11 +124,6 @@ export default function ProfileScreen() {
           <IconSymbol name="cart.fill" size={24} color="#FF6B6B" />
           <ThemedText style={styles.menuText}>Lịch sử đơn hàng</ThemedText>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <IconSymbol name="house.fill" size={24} color="#FF6B6B" />
-          <ThemedText style={styles.menuText}>Địa chỉ của tôi</ThemedText>
-        </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
