@@ -22,6 +22,9 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   address: string;
 
+  @Column({ nullable: true })
+  avatar: string;
+
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 }

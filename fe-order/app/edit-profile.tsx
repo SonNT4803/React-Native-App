@@ -96,27 +96,37 @@ export default function EditProfileScreen() {
   };
 
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    try {
+      // Kiểm tra quyền truy cập
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (status !== "granted") {
-      Alert.alert(
-        "Lỗi",
-        "Cần quyền truy cập thư viện ảnh để thực hiện chức năng này"
-      );
-      return;
-    }
+      if (status !== "granted") {
+        Alert.alert(
+          "Lỗi",
+          "Cần quyền truy cập thư viện ảnh để thực hiện chức năng này"
+        );
+        return;
+      }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.5,
-    });
+      // Mở image picker với các options
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
 
-    if (!result.canceled) {
-      // Trong thực tế, bạn sẽ cần upload ảnh lên server và lấy URL
-      // Ở đây chỉ lưu URI tạm thời
-      setProfile({ ...profile, avatar: result.assets[0].uri });
+      // Kiểm tra kết quả và cập nhật state
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setProfile((prevProfile) => ({
+          ...prevProfile,
+          avatar: result.assets[0].uri,
+        }));
+      }
+    } catch (error) {
+      console.error("Error picking image:", error);
+      Alert.alert("Lỗi", "Không thể chọn ảnh. Vui lòng thử lại.");
     }
   };
 
