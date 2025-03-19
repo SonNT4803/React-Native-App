@@ -51,7 +51,11 @@ export const ForYouFood = () => {
     setShowRightIndicator(xOffset < contentWidth - layoutWidth - 10);
   };
 
-  const handleFoodPress = (food: Food) => {
+  const handleFoodPress = (foodId: number) => {
+    router.push(`/detail?id=${foodId}`);
+  };
+
+  const handleAddToCart = (food: Food) => {
     addToCart(food, (name) => {
       Toast.show({
         type: "success",
@@ -109,7 +113,7 @@ export const ForYouFood = () => {
             <TouchableOpacity
               key={item.id}
               style={styles.bestSellerCard}
-              onPress={() => handleFoodPress(item)}
+              onPress={() => handleFoodPress(item.id)}
               activeOpacity={0.7}
             >
               <Image
@@ -128,7 +132,7 @@ export const ForYouFood = () => {
                     style={styles.addButton}
                     onPress={(e) => {
                       e.stopPropagation();
-                      handleFoodPress(item);
+                      handleAddToCart(item);
                     }}
                   >
                     <Ionicons name="add" size={20} color="#2C3E50" />

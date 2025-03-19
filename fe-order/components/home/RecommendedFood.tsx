@@ -51,16 +51,8 @@ export const RecommendedFood = () => {
     setShowRightIndicator(xOffset < contentWidth - layoutWidth - 10);
   };
 
-  const handleFoodPress = (food: Food) => {
-    addToCart(food, (name) => {
-      Toast.show({
-        type: "success",
-        text1: "Thêm vào giỏ hàng thành công",
-        text2: `Đã thêm ${name} vào giỏ hàng`,
-        position: "bottom",
-        visibilityTime: 2000,
-      });
-    });
+  const handleFoodPress = (foodId: number) => {
+    router.push(`/detail?id=${foodId}`);
   };
 
   // Update the handleAddToCart function to show Toast notification
@@ -122,7 +114,7 @@ export const RecommendedFood = () => {
             <TouchableOpacity
               key={item.id}
               style={styles.recommendedCard}
-              onPress={() => handleFoodPress(item)}
+              onPress={() => handleFoodPress(item.id)}
               activeOpacity={0.7}
             >
               <Image

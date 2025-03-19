@@ -29,6 +29,7 @@ export default function CartScreen() {
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [newOrderId, setNewOrderId] = useState<number | null>(null);
 
   const { items, updateQuantity, removeFromCart, getSubtotal, clearCart } =
     useCartStore();
@@ -107,21 +108,22 @@ export default function CartScreen() {
                 if (result) {
                   await clearCart();
 
+                  // Save order ID to state
+                  setNewOrderId(result.data.id);
                   setOrderSuccess(true);
                   setIsLoading(false);
 
                   setTimeout(() => {
                     showMessage({
                       message: "Đặt hàng thành công!",
-                      description:
-                        "Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đang được xử lý.",
+                      description: `Cảm ơn bạn đã đặt hàng. Mã đơn hàng của bạn là: #${result.data.id}`,
                       type: "success",
-                      duration: 3000,
+                      duration: 5000,
                     });
 
                     setOrderSuccess(false);
                     router.push("/");
-                  }, 2000);
+                  }, 3000);
                 }
               } catch (error) {
                 setIsLoading(false);
@@ -179,6 +181,15 @@ export default function CartScreen() {
             >
               Đặt hàng thành công!
             </Animatable.Text>
+            {newOrderId && (
+              <Animatable.Text
+                animation="fadeIn"
+                delay={1300}
+                style={styles.orderIdText}
+              >
+                Mã đơn hàng: #{newOrderId}
+              </Animatable.Text>
+            )}
           </Animatable.View>
         </View>
       )}

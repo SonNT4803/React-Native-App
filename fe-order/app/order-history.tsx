@@ -87,17 +87,11 @@ export default function OrderHistoryScreen() {
       );
     }
 
-    // Lọc theo tìm kiếm
+    // Lọc theo ID đơn hàng
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      filteredOrders = filteredOrders.filter(
-        (order) =>
-          order.id.toString().includes(query) ||
-          (order.deliveryAddress &&
-            order.deliveryAddress.toLowerCase().includes(query)) ||
-          order.orderDetails.some((detail) =>
-            detail.food.name.toLowerCase().includes(query)
-          )
+      const query = searchQuery.trim();
+      filteredOrders = filteredOrders.filter((order) =>
+        order.id.toString().includes(query)
       );
     }
 
@@ -198,14 +192,32 @@ export default function OrderHistoryScreen() {
         <View style={{ width: 24 }} />
       </View>
 
-      {/* Thêm thanh tìm kiếm */}
+      {/* Thanh tìm kiếm */}
       <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Tìm kiếm đơn hàng..."
-          value={searchQuery}
-          onChangeText={handleSearchChange}
-        />
+        <View style={styles.searchInputContainer}>
+          <Ionicons
+            name="search-outline"
+            size={20}
+            color="#888"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Nhập mã đơn hàng để tìm kiếm..."
+            value={searchQuery}
+            onChangeText={handleSearchChange}
+            keyboardType="numeric"
+            placeholderTextColor="#999"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity
+              onPress={() => setSearchQuery("")}
+              style={styles.clearButton}
+            >
+              <Ionicons name="close-circle" size={18} color="#888" />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {/* Thêm bộ lọc */}

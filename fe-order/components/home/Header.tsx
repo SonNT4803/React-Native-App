@@ -7,9 +7,9 @@ export const Header = () => {
   return (
     <View style={styles.header}>
       <View style={styles.leftContainer}>
-        <Image 
-          source={require('@/assets/images/react-logo.png')} 
-          style={styles.logo} 
+        <Image
+          source={require("@/assets/images/react-logo.png")}
+          style={styles.logo}
         />
         <View style={styles.titleContainer}>
           <ThemedText style={styles.greeting}>Xin chào!</ThemedText>

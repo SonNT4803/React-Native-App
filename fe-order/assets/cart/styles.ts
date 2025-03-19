@@ -222,11 +222,16 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   successText: {
-    marginTop: 20,
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#333",
-    textAlign: "center",
+    marginTop: 20,
+  },
+  orderIdText: {
+    fontSize: 18,
+    color: "#333",
+    marginTop: 10,
+    fontWeight: "500",
   },
   requiredField: {
     color: "#FF6B6B",
