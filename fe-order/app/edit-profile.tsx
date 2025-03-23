@@ -24,7 +24,7 @@ interface UserProfile {
   email: string;
   firstName: string;
   lastName: string;
-  phoneNumber: string;
+  phone: string;
   avatar: string;
   role: string[];
 }
@@ -38,7 +38,7 @@ export default function EditProfileScreen() {
     email: "",
     firstName: "",
     lastName: "",
-    phoneNumber: "",
+    phone: "",
     avatar: "",
     role: [],
   });
@@ -57,7 +57,7 @@ export default function EditProfileScreen() {
           email: userData.email,
           firstName: userData.firstName || "",
           lastName: userData.lastName || "",
-          phoneNumber: userData.phoneNumber || "",
+          phone: userData.phone || "",
           avatar: userData.avatar || "",
           role: userData.role,
         });
@@ -76,7 +76,7 @@ export default function EditProfileScreen() {
       const success = await authService.updateUserProfile({
         firstName: profile.firstName,
         lastName: profile.lastName,
-        phoneNumber: profile.phoneNumber,
+        phone: profile.phone,
         avatar: profile.avatar,
       });
 
@@ -211,10 +211,8 @@ export default function EditProfileScreen() {
             <ThemedText style={styles.label}>Số điện thoại</ThemedText>
             <TextInput
               style={styles.input}
-              value={profile.phoneNumber}
-              onChangeText={(text) =>
-                setProfile({ ...profile, phoneNumber: text })
-              }
+              value={profile.phone}
+              onChangeText={(text) => setProfile({ ...profile, phone: text })}
               placeholder="Nhập số điện thoại"
               placeholderTextColor="#999"
               keyboardType="phone-pad"

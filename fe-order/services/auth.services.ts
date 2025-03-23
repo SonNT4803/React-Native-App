@@ -13,7 +13,7 @@ interface UserData {
   role: string[];
   lastName?: string;
   firstName?: string;
-  phoneNumber?: string;
+  phone?: string;
   address?: string;
   avatar?: string;
 }
@@ -24,7 +24,7 @@ interface UpdateUserData {
   lastName?: string;
   password?: string;
   email?: string;
-  phoneNumber?: string;
+  phone?: string;
   address?: string;
   avatar?: string;
 }
@@ -105,7 +105,7 @@ class AuthService {
           email: response.data.email || decoded.email,
           firstName: response.data.firstName || "",
           lastName: response.data.lastName || "",
-          phoneNumber: response.data.phoneNumber || "",
+          phone: response.data.phone || "",
           address: response.data.address || "",
           avatar: response.data.avatar || "",
           role: response.data.role || decoded.role,

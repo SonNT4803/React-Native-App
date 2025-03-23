@@ -14,13 +14,16 @@ import {
   ScrollView,
   View,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import { ForYouFood } from "@/components/home/ForYouFood";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     fetchCategories();
@@ -70,24 +73,32 @@ export default function HomeScreen() {
           <View style={styles.headerContainer}>
             <ThemedText style={styles.sectionTitle}>Danh mục</ThemedText>
           </View>
-          <View style={styles.categoriesContainer}>
-            {loading ? (
-              <ActivityIndicator size="large" color="#FF6B6B" />
-            ) : categories.length > 0 ? (
-              categories.map((category) => (
+          {loading ? (
+            <ActivityIndicator size="large" color="#FF6B6B" />
+          ) : categories.length > 0 ? (
+            <FlatList
+              data={categories}
+              renderItem={({ item }) => (
                 <CategoryItem
-                  key={category.id}
-                  title={category.name}
-                  imageSource={category.image}
+                  key={item.id}
+                  title={item.name}
+                  imageSource={item.image}
                   onPress={() =>
-                    console.log(`Selected category: ${category.name}`)
+                    router.push({
+                      pathname: "/all-foods",
+                      params: { categoryId: item.id, categoryName: item.name },
+                    })
                   }
                 />
-              ))
-            ) : (
-              <ThemedText>Không có danh mục nào</ThemedText>
-            )}
-          </View>
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesContainer}
+            />
+          ) : (
+            <ThemedText>Không có danh mục nào</ThemedText>
+          )}
         </View>
 
         <BestSeller />

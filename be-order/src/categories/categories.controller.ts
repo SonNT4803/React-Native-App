@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   UseGuards,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
@@ -134,6 +135,31 @@ export class CategoriesController {
         statusCode: HttpStatus.BAD_REQUEST,
         message: error.message || 'Failed to delete category',
       };
+    }
+  }
+
+  @Get(':id/foods')
+  async getFoodsByCategory(@Param('id') id: number) {
+    try {
+      const foods = await this.categoriesService.getFoodsByCategory(id);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Foods retrieved successfully',
+        data: foods,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: error.message,
+          error: 'Not Found',
+        });
+      }
+      throw new InternalServerErrorException({
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Failed to retrieve foods',
+        error: 'Internal Server Error',
+      });
     }
   }
 }

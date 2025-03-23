@@ -13,12 +13,13 @@ import { ThemedView } from "@/components/ThemedView";
 import { FoodService } from "@/services/food.services";
 import { Food } from "@/models/food.models";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { useCartStore } from "@/services/cart.services";
 import { showMessage } from "react-native-flash-message";
 import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
 import { formartPrice } from "@/constants/FormatPrice";
+import { CategoryService } from "@/services/category.services";
 
 const { width } = Dimensions.get("window");
 const cardWidth = (width - 48) / 2;
@@ -29,10 +30,18 @@ export default function AllFoodsScreen() {
   const [addingToCart, setAddingToCart] = useState<number | null>(null);
   const router = useRouter();
   const { addToCart } = useCartStore();
+  const { categoryId, categoryName } = useLocalSearchParams<{
+    categoryId: string;
+    categoryName: string;
+  }>();
 
   useEffect(() => {
-    loadAllFoods();
-  }, []);
+    if (categoryId) {
+      loadFoodsByCategory(Number(categoryId));
+    } else {
+      loadAllFoods();
+    }
+  }, [categoryId]);
 
   const loadAllFoods = async () => {
     try {
@@ -50,8 +59,24 @@ export default function AllFoodsScreen() {
     }
   };
 
+  const loadFoodsByCategory = async (id: number) => {
+    try {
+      const data = await CategoryService.getFoodsByCategory(id);
+      setFoods(data);
+    } catch (error) {
+      console.error("Error loading foods by category:", error);
+      showMessage({
+        message: "Không thể tải danh sách món ăn theo danh mục",
+        description: "Vui lòng thử lại sau",
+        type: "danger",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleFoodPress = (foodId: number) => {
-    // router.push(`/food/${foodId}`);
+    router.push(`/detail?id=${foodId}`);
   };
 
   const handleAddToCart = (food: Food) => {
@@ -133,7 +158,9 @@ export default function AllFoodsScreen() {
         >
           <Ionicons name="arrow-back" size={24} color="#FF6B6B" />
         </TouchableOpacity>
-        <ThemedText style={styles.headerTitle}>Tất cả món ăn</ThemedText>
+        <ThemedText style={styles.headerTitle}>
+          {categoryName ? categoryName : "Tất cả món ăn"}
+        </ThemedText>
         <TouchableOpacity
           style={styles.cartButton}
           onPress={() => router.push("/cart")}
@@ -147,7 +174,7 @@ export default function AllFoodsScreen() {
           <ActivityIndicator size="large" color="#FF6B6B" />
           <ThemedText style={styles.loadingText}>Đang tải món ăn...</ThemedText>
         </View>
-      ) : (
+      ) : foods.length > 0 ? (
         <FlatList
           data={foods}
           renderItem={renderFoodItem}
@@ -157,6 +184,12 @@ export default function AllFoodsScreen() {
           columnWrapperStyle={styles.foodsRow}
           showsVerticalScrollIndicator={false}
         />
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ThemedText style={styles.loadingText}>
+            Không có món ăn nào
+          </ThemedText>
+        </View>
       )}
       <Toast />
     </ThemedView>

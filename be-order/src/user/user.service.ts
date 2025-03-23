@@ -76,8 +76,7 @@ export class UserService {
     updateData: {
       firstName?: string; // Fixed typo from fistName to firstName
       lastName?: string;
-      phoneNumber?: string;
-      address?: string;
+      phone?: string;
       avatar?: string;
     },
   ) {
@@ -90,8 +89,7 @@ export class UserService {
     // Update fields
     if (updateData.firstName) user.firstName = updateData.firstName; // Added firstName update
     if (updateData.lastName) user.lastName = updateData.lastName; // Added lastName update
-    if (updateData.phoneNumber) user.phone = updateData.phoneNumber;
-    if (updateData.address) user.address = updateData.address;
+    if (updateData.phone) user.phone = updateData.phone;
     // if (updateData.avatar) user.avatar = updateData.avatar;           // Added avatar update
     // Note: avatar handling would typically involve file uploads
     // For simplicity, we're assuming avatar is a URL string
@@ -110,7 +108,7 @@ export class UserService {
         email: user.email,
         firstName: user.firstName, // Fixed typo from fistName to firstName
         lastName: user.lastName,
-        phoneNumber: user.phone,
+        phone: user.phone,
         address: user.address,
         // avatar: user.avatar,        // Added avatar to response
         role: roles,

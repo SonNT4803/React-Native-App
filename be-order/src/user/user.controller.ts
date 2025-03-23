@@ -23,9 +23,9 @@ export class UserController {
     @Param('id') id: number,
     @Body()
     updateUserDto: {
-      firstName?: string;  // Added firstName field
+      firstName?: string; // Added firstName field
       lastName?: string;
-      phoneNumber?: string;
+      phone?: string;
       address?: string;
       avatar?: string;
     },
