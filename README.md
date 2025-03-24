@@ -1,5 +1,7 @@
 # Welcome to Order Food app 👋
 
+# Follow sonditrongmua_ (@SonNT4803)
+
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started
@@ -13,6 +15,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```bash
    yarn
    ```
+
 
 3. Start the app
 
